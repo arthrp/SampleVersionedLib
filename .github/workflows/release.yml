@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Print info
+      - name: Print and set version
         run: |
           echo "ref: ${{ github.ref_name }}"
           echo "tag: ${{ github.event.release.tag_name }}"
@@ -21,3 +21,13 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 8.0.x
+      - name: Build
+        run: dotnet build
+      - name: Pack
+        run: |
+          dotnet pack SampleVersionedLib/SampleVersionedLib.csproj --output out
+          zip -r release.zip out
+      - name: Upload
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release.zip
