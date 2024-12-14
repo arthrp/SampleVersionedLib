@@ -15,6 +15,8 @@ jobs:
         run: |
           echo "ref: ${{ github.ref_name }}"
           echo "tag: ${{ github.event.release.tag_name }}"
+          sed -i 's/<Version>1.0.0<\/Version>/<Version>${{ github.event.release.tag_name }}<\/Version>/g' SampleVersionedLib/SampleVersionedLib.csproj
+          cat SampleVersionedLib/SampleVersionedLib.csproj
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
