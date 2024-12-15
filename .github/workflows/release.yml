@@ -11,9 +11,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Check tag
+        run: |
+          regex="[0-9]+\.[0-9]+\.[0-9]+"
+          if [[ "${{ github.event.release.tag_name }}" =~ $regex ]]; then
+            echo "Tag is valid"
+          else
+            echo "Tag invalid!"
+            exit 1
+          fi
       - name: Print and set version
         run: |
-          echo "ref: ${{ github.ref_name }}"
           echo "tag: ${{ github.event.release.tag_name }}"
           sed -i 's/<Version>1.0.0<\/Version>/<Version>${{ github.event.release.tag_name }}<\/Version>/g' SampleVersionedLib/SampleVersionedLib.csproj
           cat SampleVersionedLib/SampleVersionedLib.csproj
